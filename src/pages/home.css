@@ -1,0 +1,20 @@
+.commander {
+    display: flex;
+    padding: 12px 0;
+}
+
+.commander input {
+    width: 100%;
+    font-size: 16px;
+    line-height: 150%;
+    padding: 2px 6px;
+}
+
+.commander .hidden {
+    display: none;
+}
+
+.task-view {
+    display: flex;
+    gap: 8px;
+}
