@@ -3,14 +3,15 @@
         Source Code Pro,
         Menlo,
         Monaco,
-        'Courier New',
+        "Courier New",
         monospace;
+    font-size: 16px;
     line-height: 120%;
     font-weight: 400;
 
     color-scheme: light dark;
     color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
+    background-color: #424561;
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;

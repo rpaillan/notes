@@ -1,8 +1,8 @@
-import { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef } from "react";
 import { useTasks } from "../stores/useTasks";
-import { runCommand } from "./commander";
 
 import "./home.css";
+import { useCommander } from "../stores/useCommander";
 
 export const Home: FC = () => {
     return (
@@ -18,63 +18,35 @@ export const Home: FC = () => {
 - m23:4 move line 23 to 6
 */
 
-type CommanderState = "command" | "text";
 const Commander: FC = () => {
-    const [command, setCommand] = useState("");
-    const [state, setState] = useState<CommanderState>("command");
+    const command = useCommander(state => state.command.join(""));
+    const mode = useCommander(state => state.mode);
+    const addTask = useTasks(state => state.addTask);
+
     const inputRef = useRef<HTMLInputElement>(null);
-    const addTask = useTasks(state => state.add);
 
     useEffect(() => {
-        if (command && command.endsWith("+Enter")) {
-            let c = command.replace("+Enter", "");
-            console.log("command", c);
-            if (c === "new") {
-                setState("text");
-                setCommand("");
-            }
-            if (c === "com") {
-                setState("command");
-                setCommand("");
-            }
-        }
-        if (command && command.endsWith("+Escape")) {
-            setCommand("");
-            setState("command");
-        }
-    }, [command]);
-
-    const onKeyPressed = (event: KeyboardEvent) => {
-        //console.log(event.key, event.charCode, event.code, event);
-        if (event.key && event.key.length === 1) {
-            setCommand(c => c + event.key);
-        }
-        if (event.key && event.key.length > 1) {
-            setCommand(c => c + "+" + event.key);
-        }
-    };
-
-    useEffect(() => {
-        document.addEventListener("keyup", onKeyPressed);
-        return () => {
-            console.log("undone");
-            document.removeEventListener("keyup", onKeyPressed);
-        };
-    }, []);
-
-    useEffect(() => {
-        console.log("ffffoccusss", inputRef);
-        if (inputRef.current && state === "text") {
+        if (inputRef.current && mode === "text") {
             inputRef.current.focus();
         }
-    }, [inputRef, state]);
+    }, [inputRef, mode]);
 
     return (
         <div className="commander">
-            <div className={state === "command" ? "visible" : "hidden"}>
-                Command : {command}
+            <div
+                className={
+                    "command-mode " +
+                    (mode === "command" ? "visible" : "hidden")
+                }
+            >
+                [{mode}] {command}
             </div>
-            <div className={state === "text" ? "visible" : "hidden"}>
+            <div
+                className={
+                    "text-mode " + (mode === "text" ? "visible" : "hidden")
+                }
+            >
+                [{mode}]
                 <input
                     ref={inputRef}
                     onKeyUp={e => {
@@ -85,8 +57,6 @@ const Commander: FC = () => {
                                 state: "open",
                             });
                             target.value = "";
-                            setState("command");
-                            setCommand("");
                         }
                     }}
                 />

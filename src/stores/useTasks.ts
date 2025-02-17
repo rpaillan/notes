@@ -1,15 +1,5 @@
 import { create } from "zustand";
-
-export interface Task {
-    id: string;
-    title: string;
-    state: "open" | "in-progress" | "done" | "canceled";
-}
-
-interface TasksState {
-    tasks: Task[];
-    add: (task: Omit<Task, "id">) => void;
-}
+import { useCommander } from "./useCommander";
 
 const initialTasks: Task[] = [
     {
@@ -29,13 +19,27 @@ const initialTasks: Task[] = [
     },
 ];
 
+export interface Task {
+    id: string;
+    title: string;
+    state: "open" | "in-progress" | "done" | "canceled";
+}
+
+interface TasksState {
+    tasks: Task[];
+    addTask: (task: Omit<Task, "id">) => void;
+}
+
 export const useTasks = create<TasksState>()(set => ({
     tasks: initialTasks,
-    add: task => {
+    addTask: task => {
         const nTask = { ...task, id: crypto.randomUUID() };
         set(state => {
             const tasks = [nTask, ...state.tasks];
             return { tasks };
         });
+        const commander = useCommander.getState();
+        commander.enableCommandMode();
+        commander.resetCommand();
     },
 }));

@@ -1,13 +1,25 @@
 .commander {
     display: flex;
     padding: 12px 0;
+
+    font-size: 18px;
+    line-height: 150%;
+}
+
+.commander div {
+    flex-grow: 1;
+}
+
+.commander .text-mode {
+    display: flex;
+    gap: 8px;
+    align-items: center;
 }
 
 .commander input {
     width: 100%;
-    font-size: 16px;
+    font-size: 18px;
     line-height: 150%;
-    padding: 2px 6px;
 }
 
 .commander .hidden {
