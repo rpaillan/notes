@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { useTasks } from "./useTasks";
 
 interface CommanderState {
     command: string[];
@@ -26,9 +27,16 @@ export const useCommander = create<CommanderState>()(set => ({
 const processCommand = (lastKey: string) => {
     const commander = useCommander.getState();
     const command = commander.command.join("");
+    const tasksState = useTasks.getState();
+    console.log("Testing command (" + command + ") last key (" + lastKey + ")");
     if (lastKey === "Enter") {
         if (command === "new") {
             commander.enableTextMode();
+        }
+        if (/d\d+/g.test(command)) {
+            const position = parseInt(command.replace("d", ""));
+            const wasDeleted = tasksState.deleteTaskByPosition(position);
+            console.log("delete", command, wasDeleted);
         }
         commander.resetCommand();
     } else if (lastKey === "Escape") {
@@ -42,16 +50,31 @@ const processCommand = (lastKey: string) => {
 };
 
 const onKeyPressed = (event: KeyboardEvent) => {
+    //event.stopPropagation();
+    //event.preventDefault();
     const state = useCommander.getState();
-    console.log(state.mode, event.key, event.charCode, event.code);
+    console.log(
+        state.mode,
+        event.key,
+        event.charCode,
+        event.code,
+        "alt:" + event.altKey,
+        "shift:" + event.shiftKey,
+        "ctrl:" + event.ctrlKey,
+        "meta:" + event.metaKey,
+    );
     if (state.mode === "command") {
         if (event.key && event.key.length >= 1) {
             useCommander.getState().addKey(event.key);
         }
     }
-    if (state.mode === "text" && event.key === "Escape") {
-        useCommander.getState().enableCommandMode();
+};
+
+const onKeyUp = (event: KeyboardEvent) => {
+    if (event.key === "Escape" || event.key === "Backspace") {
+        useCommander.getState().addKey(event.key);
     }
 };
 
-document.addEventListener("keyup", onKeyPressed);
+document.addEventListener("keypress", onKeyPressed);
+document.addEventListener("keyup", onKeyUp);
