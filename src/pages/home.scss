@@ -1,0 +1,82 @@
+.commander {
+    display: flex;
+    padding: 12px 0;
+
+    font-size: 18px;
+    line-height: 150%;
+
+    div {
+        flex-grow: 1;
+    }
+
+    .text-mode {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    textarea {
+        width: 100%;
+        font-size: 18px;
+        line-height: 150%;
+        resize: none;
+    }
+    .hidden {
+        display: none;
+    }
+}
+
+.task-view {
+    &.selected {
+        background-color: rgb(72, 114, 116);
+        margin: 12px 0;
+        padding: 12px;
+        .task-view-desc {
+            padding-top: 12px;
+            font-size: 12px;
+            opacity: 0.8;
+            padding-left: 0;
+
+            white-space: pre-wrap; /* Since CSS 2.1 */
+            white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+            white-space: -pre-wrap; /* Opera 4-6 */
+            white-space: -o-pre-wrap; /* Opera 7 */
+            word-wrap: break-word; /* Internet Explorer 5.5+ */
+        }
+    }
+
+    .task-view-title {
+        display: flex;
+        gap: 8px;
+    }
+
+    .task-view-desc {
+        font-size: 12px;
+        padding-left: 30px;
+        opacity: 0.6;
+
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}
+
+.info-list {
+    display: flex;
+    gap: 8px;
+
+    div {
+        margin-top: 20px;
+        background-color: rgb(36, 40, 52);
+        padding: 2px 6px;
+        border-radius: 6px;
+        font-size: 12px;
+    }
+    code {
+        background-color: black;
+        color: beige;
+        padding: 2px 6px;
+        border-radius: 6px;
+        font-size: 12px;
+    }
+}

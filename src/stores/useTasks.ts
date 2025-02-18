@@ -49,12 +49,15 @@ export interface Task {
 
 interface TasksState {
     tasks: Task[];
+    taskIdSelected: string | null;
     addTask: (task: Omit<Task, "id">) => void;
     deleteTaskByPosition: (position: number) => boolean;
+    selectTask: (position: number) => void;
 }
 
 export const useTasks = create<TasksState>()((set, get) => ({
     tasks: initialTasks,
+    taskIdSelected: initialTasks[1].id,
     addTask: task => {
         const nTask = { ...task, id: crypto.randomUUID() };
         set(state => {
@@ -73,5 +76,9 @@ export const useTasks = create<TasksState>()((set, get) => ({
             return true;
         }
         return false;
+    },
+    selectTask: position => {
+        const task = get().tasks[position - 1];
+        set({ taskIdSelected: (task && task.id) || null });
     },
 }));

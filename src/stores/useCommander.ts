@@ -28,15 +28,26 @@ const processCommand = (lastKey: string) => {
     const commander = useCommander.getState();
     const command = commander.command.join("");
     const tasksState = useTasks.getState();
-    console.log("Testing command (" + command + ") last key (" + lastKey + ")");
+    //console.log("Testing command (" + command + ") last key (" + lastKey + ")");
     if (lastKey === "Enter") {
         if (command === "new") {
-            commander.enableTextMode();
+            // TODO how to solve this issue
+            // if we press Enter
+            // the areatext is shown but enter event is still present
+            // so a new line is added to the textarea
+            // then, adding setTimeout we make sure the change to text mode
+            // is made in the future
+            setTimeout(() => {
+                commander.enableTextMode();
+            }, 0);
         }
         if (/d\d+/g.test(command)) {
             const position = parseInt(command.replace("d", ""));
-            const wasDeleted = tasksState.deleteTaskByPosition(position);
-            console.log("delete", command, wasDeleted);
+            tasksState.deleteTaskByPosition(position);
+        }
+        if (/s\d+/g.test(command)) {
+            const position = parseInt(command.replace("s", ""));
+            tasksState.selectTask(position);
         }
         commander.resetCommand();
     } else if (lastKey === "Escape") {
@@ -53,7 +64,7 @@ const onKeyPressed = (event: KeyboardEvent) => {
     //event.stopPropagation();
     //event.preventDefault();
     const state = useCommander.getState();
-    console.log(
+    /* console.log(
         state.mode,
         event.key,
         event.charCode,
@@ -62,7 +73,7 @@ const onKeyPressed = (event: KeyboardEvent) => {
         "shift:" + event.shiftKey,
         "ctrl:" + event.ctrlKey,
         "meta:" + event.metaKey,
-    );
+    ); */
     if (state.mode === "command") {
         if (event.key && event.key.length >= 1) {
             useCommander.getState().addKey(event.key);

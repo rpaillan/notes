@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef } from "react";
 import { useTasks } from "../stores/useTasks";
 
-import "./home.css";
+import "./home.scss";
 import { useCommander } from "../stores/useCommander";
 import clsx from "clsx";
 
@@ -61,10 +61,11 @@ const Commander: FC = () => {
 
 const TaskView: FC = () => {
     const tasks = useTasks(state => state.tasks);
+    const taskIdSelected = useTasks(state => state.taskIdSelected);
     return (
         <div>
             {tasks.map((task, index) => (
-                <div className="task-view" key={task.id}>
+                <div className={clsx("task-view", { selected: task.id === taskIdSelected })} key={task.id}>
                     <div className="task-view-title">
                         <div>{index + 1}.</div>
                         <div>({task.state})</div>
@@ -82,6 +83,7 @@ const Info: FC = () => {
         { name: "new task", code: "new" },
         { name: "delete", code: "d{pos}" },
         { name: "home", code: "[Escape]" },
+        { name: "select", code: "s{pos}" },
     ];
     return (
         <div className="info-list">
